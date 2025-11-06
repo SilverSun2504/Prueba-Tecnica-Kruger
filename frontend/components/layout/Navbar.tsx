@@ -1,4 +1,3 @@
-// src/components/layout/Navbar.tsx
 "use client";
 
 import { useAuthStore } from "@/store/auth.store";

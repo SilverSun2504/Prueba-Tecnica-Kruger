@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
-// Auth Schemas
 export const LoginSchema = z.object({
-  email: z.string().min(1, { message: 'Username/Email requerido' }), // Cambiamos para aceptar username o email
+  email: z.string().min(1, { message: 'Username/Email requerido' }),
   password: z
     .string()
     .min(6, { message: 'La contraseña debe tener al menos 6 caracteres' }),
@@ -14,7 +13,6 @@ export const RegisterSchema = z.object({
   password: z.string().min(6, { message: 'La contraseña debe tener al menos 6 caracteres' }),
 });
 
-// Customer Schemas
 export const CustomerSchema = z.object({
   name: z.string().min(2, { message: 'El nombre debe tener al menos 2 caracteres' }),
   email: z.string().email({ message: 'Email no válido' }),
@@ -22,7 +20,6 @@ export const CustomerSchema = z.object({
   address: z.string().optional(),
 });
 
-// Plan Schemas
 export const PlanSchema = z.object({
   name: z.string().min(2, { message: 'El nombre debe tener al menos 2 caracteres' }),
   price: z.number().min(0, { message: 'El precio debe ser mayor a 0' }),
@@ -30,7 +27,6 @@ export const PlanSchema = z.object({
   active: z.boolean().optional(),
 });
 
-// Subscription Schemas
 export const SubscriptionSchema = z.object({
   customerId: z.number().min(1, { message: 'Selecciona un cliente' }),
   planId: z.number().min(1, { message: 'Selecciona un plan' }),
@@ -41,12 +37,10 @@ export const UpdateSubscriptionSchema = z.object({
   status: z.enum(['ACTIVE', 'PAUSED', 'CANCELED'], { message: 'Selecciona un estado válido' }).optional(),
 });
 
-// Payment Schemas
 export const PaymentSchema = z.object({
   method: z.enum(['CARD', 'TRANSFER', 'CASH'], { message: 'Selecciona un método de pago válido' }),
 });
 
-// Types from API responses
 export interface User {
   id: number;
   username: string;
@@ -58,7 +52,7 @@ export interface Customer {
   id: number;
   name: string;
   email: string;
-  owner?: User | null; // Opcional porque puede venir como null del backend
+  owner?: User | null;
   createdAt: string;
 }
 

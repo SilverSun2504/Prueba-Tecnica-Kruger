@@ -38,7 +38,7 @@ import { z } from "zod";
 type SubscriptionFormInputs = z.infer<typeof SubscriptionSchema>;
 
 export default function SubscriptionsPage() {
-  const _isAdmin = useAuthStore((state) => state.isAdmin());
+  const isAdmin = useAuthStore((state) => state.isAdmin());
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
@@ -47,6 +47,9 @@ export default function SubscriptionsPage() {
   const [statusFilter, setStatusFilter] = useState<
     "ALL" | "ACTIVE" | "PAUSED" | "CANCELED"
   >("ALL");
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | "ALL">(
+    "ALL"
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSubscription, setEditingSubscription] =
     useState<Subscription | null>(null);
@@ -65,15 +68,27 @@ export default function SubscriptionsPage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [subscriptionsData, customersData, plansData] = await Promise.all([
-        subscriptionService.getAll(),
+
+      // Obtener clientes y planes primero
+      const [customersData, plansData] = await Promise.all([
         customerService.getAll(),
         planService.getAll(),
       ]);
 
-      setSubscriptions(subscriptionsData);
       setCustomers(customersData);
-      setPlans(plansData.filter((plan) => plan.active)); // Solo planes activos para nuevas suscripciones
+      setPlans(plansData.filter((plan) => plan.active));
+
+      // Para admins: si hay un cliente seleccionado, obtener sus suscripciones
+      // Para usuarios normales: siempre obtener sus propias suscripciones
+      if (isAdmin && selectedCustomerId !== "ALL") {
+        const subscriptionsData = await subscriptionService.getByCustomer(
+          selectedCustomerId as number
+        );
+        setSubscriptions(subscriptionsData);
+      } else {
+        const subscriptionsData = await subscriptionService.getAll();
+        setSubscriptions(subscriptionsData);
+      }
     } catch (error) {
       toast.error("Error al cargar datos");
     } finally {
@@ -83,7 +98,7 @@ export default function SubscriptionsPage() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [selectedCustomerId]); // Re-fetch cuando cambie el cliente seleccionado
 
   // Filter subscriptions
   const filteredSubscriptions = subscriptions.filter((subscription) => {
@@ -271,6 +286,31 @@ export default function SubscriptionsPage() {
             />
           </div>
         </div>
+
+        {/* Filtro de Cliente - Solo para Admins */}
+        {isAdmin && (
+          <div className="sm:w-64">
+            <select
+              value={selectedCustomerId}
+              onChange={(e) =>
+                setSelectedCustomerId(
+                  e.target.value === "ALL" ? "ALL" : Number(e.target.value)
+                )
+              }
+              className="w-full border border-gray-300 rounded-lg py-2 px-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="ALL">Mis suscripciones</option>
+              <optgroup label="Ver suscripciones de:">
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name} ({customer.email})
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+          </div>
+        )}
+
         <div className="sm:w-48">
           <select
             value={statusFilter}
@@ -284,6 +324,26 @@ export default function SubscriptionsPage() {
           </select>
         </div>
       </div>
+
+      {/* Indicador de vista de cliente específico */}
+      {isAdmin && selectedCustomerId !== "ALL" && (
+        <div className="mb-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <div className="flex items-center">
+            <User className="w-5 h-5 text-blue-600 mr-2" />
+            <div>
+              <p className="text-sm font-medium text-blue-900">
+                Viendo suscripciones de:{" "}
+                <span className="font-bold">
+                  {customers.find((c) => c.id === selectedCustomerId)?.name}
+                </span>
+              </p>
+              <p className="text-xs text-blue-700 mt-1">
+                Mostrando todas las suscripciones de este cliente
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Content */}
       {filteredSubscriptions.length === 0 ? (

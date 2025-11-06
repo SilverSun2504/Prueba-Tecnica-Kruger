@@ -56,15 +56,16 @@ export default function InvoicesPage() {
   // Filter invoices
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch =
-      invoice.subscription.customer.name
-        .toLowerCase()
+      invoice.subscription?.customer?.name
+        ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      invoice.subscription.customer.email
-        .toLowerCase()
+      invoice.subscription?.customer?.email
+        ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      invoice.subscription.plan.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
+      invoice.subscription?.plan?.name
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      false;
 
     const matchesStatus =
       statusFilter === "ALL" || invoice.status === statusFilter;
@@ -243,10 +244,10 @@ export default function InvoicesPage() {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {invoice.subscription.customer.name}
+                            {invoice.subscription?.customer?.name || "N/A"}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {invoice.subscription.customer.email}
+                            {invoice.subscription?.customer?.email || "N/A"}
                           </div>
                         </div>
                       </div>
@@ -255,7 +256,7 @@ export default function InvoicesPage() {
                       <div className="flex items-center">
                         <Package className="w-4 h-4 text-gray-400 mr-2" />
                         <div className="text-sm text-gray-900">
-                          {invoice.subscription.plan.name}
+                          {invoice.subscription?.plan?.name || "N/A"}
                         </div>
                       </div>
                     </td>
@@ -368,10 +369,10 @@ export default function InvoicesPage() {
               </h4>
               <div className="bg-white border rounded-lg p-4">
                 <p className="font-medium text-gray-900">
-                  {selectedInvoice.subscription.customer.name}
+                  {selectedInvoice.subscription?.customer?.name || "N/A"}
                 </p>
                 <p className="text-gray-600">
-                  {selectedInvoice.subscription.customer.email}
+                  {selectedInvoice.subscription?.customer?.email || "N/A"}
                 </p>
               </div>
             </div>
@@ -384,16 +385,22 @@ export default function InvoicesPage() {
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Plan:</span>
                   <span className="font-medium text-gray-900">
-                    {selectedInvoice.subscription.plan.name}
+                    {selectedInvoice.subscription?.plan?.name || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Ciclo:</span>
                   <span className="text-gray-900">
-                    {selectedInvoice.subscription.plan.billingCycle ===
+                    {selectedInvoice.subscription?.plan?.billingCycle ===
                     "MONTHLY"
                       ? "Mensual"
-                      : "Anual"}
+                      : selectedInvoice.subscription?.plan?.billingCycle ===
+                        "QUARTERLY"
+                      ? "Trimestral"
+                      : selectedInvoice.subscription?.plan?.billingCycle ===
+                        "YEARLY"
+                      ? "Anual"
+                      : "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-lg font-medium">

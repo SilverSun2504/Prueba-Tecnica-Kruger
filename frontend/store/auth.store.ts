@@ -16,7 +16,6 @@ interface AuthActions {
   isAdmin: () => boolean;
 }
 
-// Estado inicial
 const initialState: AuthState = {
   token: null,
   user: null,
@@ -29,10 +28,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     (set, get) => ({
       ...initialState,
 
-      // Acción de Login
       login: (token: string, user: User) => {
-        // Guardar token en cookie para el middleware
-        document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`; // 7 días
+        document.cookie = `auth-token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`;
         
         set({
           token,
@@ -42,24 +39,19 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         });
       },
 
-      // Acción de Logout
       logout: () => {
-        // Limpiar cookie
         document.cookie = 'auth-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
         
         set(initialState);
-        // Redirigir al login si estamos en el cliente
         if (typeof window !== 'undefined') {
           window.location.href = '/login';
         }
       },
 
-      // Establecer estado de carga
       setLoading: (loading: boolean) => {
         set({ isLoading: loading });
       },
 
-      // Verificar si el usuario es admin
       isAdmin: () => {
         const { user } = get();
         return user?.role === 'ADMIN';
@@ -67,7 +59,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
     }),
     {
       name: 'auth-storage',
-      // Solo persistir ciertos campos
       partialize: (state) => ({
         token: state.token,
         user: state.user,

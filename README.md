@@ -1,284 +1,558 @@
-# 🏢 KdevBill Frontend - Sistema de Facturación SaaS
+# 🏢 KdevBill - Sistema de Gestión de Facturación y Suscripciones# 🏢 KdevBill Frontend - Sistema de Facturación SaaS
 
-Sistema de gestión de suscripciones y facturación para Kruger Corporation, desarrollado con **Next.js 13+**, **React 18**, **TypeScript**, y **TailwindCSS**.
+Sistema completo de gestión de suscripciones y facturación desarrollado para Kruger Corporation.Sistema de gestión de suscripciones y facturación para Kruger Corporation, desarrollado con **Next.js 13+**, **React 18**, **TypeScript**, y **TailwindCSS**.
 
-## 🚀 Características Principales
+## 📁 Estructura del Proyecto## 🚀 Características Principales
 
-- ✅ **Autenticación JWT** con persistencia de sesión y middleware de protección
+Este es un proyecto **monorepo** que contiene:- ✅ **Autenticación JWT** con persistencia de sesión y middleware de protección
+
 - ✅ **Dashboard interactivo** con KPIs en tiempo real y gráficas
-- ✅ **Gestión completa de clientes** (CRUD con modales y validación)
-- ✅ **Catálogo de planes** con diferentes ciclos de facturación (mensual, trimestral, anual)
-- ✅ **Administración de suscripciones** con cambios de estado y renovación manual
-- ✅ **Sistema de facturas** con visualización de detalles y procesamiento de pagos
-- ✅ **Historial de pagos** con filtros por estado y método de pago
-- ✅ **Control de acceso por roles** (ADMIN/USER) con permisos granulares
+
+````- ✅ **Gestión completa de clientes** (CRUD con modales y validación)
+
+Prueba-Tecnica-Kruger/- ✅ **Catálogo de planes** con diferentes ciclos de facturación (mensual, trimestral, anual)
+
+├── backend/          # API REST con Spring Boot- ✅ **Administración de suscripciones** con cambios de estado y renovación manual
+
+├── frontend/         # Aplicación web con Next.js- ✅ **Sistema de facturas** con visualización de detalles y procesamiento de pagos
+
+└── README.md         # Este archivo- ✅ **Historial de pagos** con filtros por estado y método de pago
+
+```- ✅ **Control de acceso por roles** (ADMIN/USER) con permisos granulares
+
 - ✅ **Interfaz responsive** optimizada para mobile, tablet y desktop
-- ✅ **Validación de formularios** con React Hook Form + Zod schemas
+
+---- ✅ **Validación de formularios** con React Hook Form + Zod schemas
+
 - ✅ **Notificaciones toast** para feedback inmediato del usuario
-- ✅ **Estados de carga** (skeletons) y manejo robusto de errores
 
-## 🛠️ Stack Tecnológico
+## 🚀 Backend - Spring Boot API- ✅ **Estados de carga** (skeletons) y manejo robusto de errores
 
-| Categoría      | Tecnología               |
-| -------------- | ------------------------ |
-| Framework      | Next.js 13+ (App Router) |
-| UI Library     | React 18                 |
-| Lenguaje       | TypeScript               |
+
+
+### Tecnologías## 🛠️ Stack Tecnológico
+
+- Java 17
+
+- Spring Boot 3.x| Categoría      | Tecnología               |
+
+- Spring Security + JWT| -------------- | ------------------------ |
+
+- PostgreSQL| Framework      | Next.js 13+ (App Router) |
+
+- Flyway (Migraciones)| UI Library     | React 18                 |
+
+- Gradle| Lenguaje       | TypeScript               |
+
 | Estilos        | TailwindCSS              |
-| Estado Global  | Zustand                  |
-| Formularios    | React Hook Form          |
-| Validación     | Zod                      |
-| HTTP Client    | Axios                    |
-| Notificaciones | React Hot Toast          |
-| Iconos         | Lucide React             |
 
-## 🚦 Inicio Rápido
+### Características| Estado Global  | Zustand                  |
 
-### 1. Prerequisitos
+- ✅ API RESTful completa| Formularios    | React Hook Form          |
 
-- **Node.js 18+** y npm/yarn/pnpm
-- **Backend API** ejecutándose en `http://localhost:8080/kdevbill`
+- ✅ Autenticación JWT| Validación     | Zod                      |
 
-### 2. Instalar dependencias
+- ✅ Control de acceso por roles (ADMIN/USER)| HTTP Client    | Axios                    |
 
-```bash
-npm install
-```
+- ✅ Gestión de clientes, planes y suscripciones| Notificaciones | React Hot Toast          |
 
-### 3. Variables de entorno (Opcional)
+- ✅ Sistema de facturación automática| Iconos         | Lucide React             |
 
-El proyecto usa la URL del backend configurada directamente en `lib/api.ts`:
+- ✅ Procesamiento de pagos
 
-```typescript
+- ✅ Documentación OpenAPI (Swagger)## 🚦 Inicio Rápido
 
-```
+
+
+### Ejecutar Backend### 1. Prerequisitos
+
+
+
+```bash- **Node.js 18+** y npm/yarn/pnpm
+
+cd backend- **Backend API** ejecutándose en `http://localhost:8080/kdevbill`
+
+
+
+# Configurar base de datos en application.properties### 2. Instalar dependencias
+
+# spring.datasource.url=jdbc:postgresql://localhost:5432/kdevbill
+
+# spring.datasource.username=tu_usuario```bash
+
+# spring.datasource.password=tu_passwordnpm install
+
+````
+
+# Ejecutar con Gradle
+
+./gradlew bootRun### 3. Variables de entorno (Opcional)
+
+# O con el wrapper de WindowsEl proyecto usa la URL del backend configurada directamente en `lib/api.ts`:
+
+gradlew.bat bootRun
+
+`````typescript
+
+
+
+**URL Backend:** `http://localhost:8080`  ```
+
+**Swagger UI:** `http://localhost:8080/swagger-ui.html`
 
 Si necesitas cambiar la URL del backend, modifica el archivo `lib/api.ts`:
 
+---
+
 ```typescript
-baseURL: "http://localhost:8080/kdevbill"; // Cambia esta URL según tu configuración
+
+## 🎨 Frontend - Next.js ApplicationbaseURL: "http://localhost:8080/kdevbill"; // Cambia esta URL según tu configuración
+
 ```
 
-### 4. Ejecutar la aplicación
+### Tecnologías
 
-```bash
-# Modo desarrollo (con hot reload)
-npm run dev
+- Next.js 16 (App Router)### 4. Ejecutar la aplicación
 
-# Build de producción
+- React 19
+
+- TypeScript```bash
+
+- TailwindCSS# Modo desarrollo (con hot reload)
+
+- Zustand (Estado global)npm run dev
+
+- Axios
+
+- React Hook Form + Zod# Build de producción
+
 npm run build
-npm start
 
-# Linting
-npm run lint
-```
+### Característicasnpm start
 
-La aplicación estará disponible en **`http://localhost:3000`**
+- ✅ Dashboard interactivo con métricas
 
-## 🔑 Credenciales de Prueba
+- ✅ Gestión completa de clientes (CRUD)# Linting
 
-### Usuario Administrador
+- ✅ Administración de planes y suscripcionesnpm run lint
 
-```
-Usuario: admin2
+- ✅ Sistema de facturas y pagos```
+
+- ✅ Control de acceso por roles
+
+- ✅ Interfaz responsiveLa aplicación estará disponible en **`http://localhost:3000`**
+
+- ✅ Validación de formularios
+
+- ✅ Notificaciones en tiempo real## 🔑 Credenciales de Prueba
+
+
+
+### Ejecutar Frontend### Usuario Administrador
+
+
+
+```bash```
+
+cd frontendUsuario: admin2
+
 Contraseña: admin123
-```
+
+# Instalar dependencias```
+
+npm install
 
 ### Usuario Regular
 
-```
-Usuario: user1
+# Configurar variable de entorno (opcional)
+
+# Crear .env.local con:```
+
+# NEXT_PUBLIC_API_URL=http://localhost:8080/kdevbillUsuario: user1
+
 Contraseña: user123
-```
 
-## 📱 Páginas Implementadas
+# Ejecutar en modo desarrollo```
 
-| Ruta                       | Descripción         | Funcionalidades                                                      |
+npm run dev
+
+```## 📱 Páginas Implementadas
+
+
+
+**URL Frontend:** `http://localhost:3000`| Ruta                       | Descripción         | Funcionalidades                                                      |
+
 | -------------------------- | ------------------- | -------------------------------------------------------------------- |
-| `/login`                   | Inicio de sesión    | Login con JWT, auto-fill de credenciales de prueba                   |
-| `/dashboard`               | Panel principal     | KPIs, gráficas de ingresos, últimas facturas, suscripciones próximas |
-| `/dashboard/customers`     | Gestión de clientes | CRUD completo, búsqueda, modal de formulario                         |
-| `/dashboard/plans`         | Catálogo de planes  | CRUD (solo ADMIN), búsqueda, badges de estado                        |
-| `/dashboard/subscriptions` | Suscripciones       | CRUD, filtros por estado, renovación manual                          |
-| `/dashboard/invoices`      | Facturas            | Ver lista, detalle, registrar pagos, filtros                         |
-| `/dashboard/payments`      | Historial de pagos  | Ver lista, detalle, filtros múltiples                                |
 
-## 🎯 Funcionalidades Destacadas
+---| `/login`                   | Inicio de sesión    | Login con JWT, auto-fill de credenciales de prueba                   |
+
+| `/dashboard`               | Panel principal     | KPIs, gráficas de ingresos, últimas facturas, suscripciones próximas |
+
+## 🔧 Configuración Completa del Sistema| `/dashboard/customers`     | Gestión de clientes | CRUD completo, búsqueda, modal de formulario                         |
+
+| `/dashboard/plans`         | Catálogo de planes  | CRUD (solo ADMIN), búsqueda, badges de estado                        |
+
+### 1. Prerequisitos| `/dashboard/subscriptions` | Suscripciones       | CRUD, filtros por estado, renovación manual                          |
+
+| `/dashboard/invoices`      | Facturas            | Ver lista, detalle, registrar pagos, filtros                         |
+
+- **Java 17+** (para backend)| `/dashboard/payments`      | Historial de pagos  | Ver lista, detalle, filtros múltiples                                |
+
+- **Node.js 18+** (para frontend)
+
+- **PostgreSQL 14+** (base de datos)## 🎯 Funcionalidades Destacadas
+
+- **Git**
 
 ### 🔐 Sistema de Autenticación
 
+### 2. Configurar Base de Datos
+
 - JWT tokens con interceptores automáticos
-- Middleware de protección de rutas
-- Persistencia de sesión con cookies
-- Logout automático en caso de token expirado
+
+```sql- Middleware de protección de rutas
+
+-- Crear base de datos- Persistencia de sesión con cookies
+
+CREATE DATABASE kdevbill;- Logout automático en caso de token expirado
+
 - Control de acceso por roles (ADMIN/USER)
 
-### 📊 Dashboard Interactivo
+-- Crear usuario (opcional)
 
-- 4 KPIs principales con actualización en tiempo real
+CREATE USER kdevbill_user WITH PASSWORD 'tu_password';### 📊 Dashboard Interactivo
+
+GRANT ALL PRIVILEGES ON DATABASE kdevbill TO kdevbill_user;
+
+```- 4 KPIs principales con actualización en tiempo real
+
 - Gráfica de ingresos mensuales (últimos 6 meses)
-- Tabla de últimas facturas
+
+### 3. Iniciar el Backend- Tabla de últimas facturas
+
 - Tabla de suscripciones próximas a vencer
-- Loading skeletons durante carga
 
-### 👥 Gestión de Clientes (CRUD Completo)
+```bash- Loading skeletons durante carga
 
-- Crear, editar, eliminar clientes
-- Búsqueda en tiempo real
+# En la carpeta raíz del proyecto
+
+cd backend### 👥 Gestión de Clientes (CRUD Completo)
+
+
+
+# Configurar application.properties- Crear, editar, eliminar clientes
+
+# Editar: src/main/resources/application.properties- Búsqueda en tiempo real
+
 - Modal con formulario validado
-- Información del propietario del cliente
-- Confirmaciones para acciones destructivas
+
+# Ejecutar- Información del propietario del cliente
+
+./gradlew bootRun- Confirmaciones para acciones destructivas
+
+```
 
 ### 📦 Planes de Suscripción
 
+### 4. Iniciar el Frontend
+
 - Creación y edición (solo ADMIN)
-- Ciclos de facturación: Mensual, Trimestral, Anual
-- Soft delete (deshabilitar plan)
-- Badges de estado (Activo/Inactivo)
+
+```bash- Ciclos de facturación: Mensual, Trimestral, Anual
+
+# En otra terminal, desde la carpeta raíz- Soft delete (deshabilitar plan)
+
+cd frontend- Badges de estado (Activo/Inactivo)
+
 - Formato de precios en USD
 
-### 📋 Administración de Suscripciones
+# Instalar dependencias (solo la primera vez)
 
-- Crear suscripciones asociando cliente + plan
-- Editar plan de suscripción existente
-- Cambiar estado: Activa/Pausada/Cancelada
+npm install### 📋 Administración de Suscripciones
+
+
+
+# Ejecutar- Crear suscripciones asociando cliente + plan
+
+npm run dev- Editar plan de suscripción existente
+
+```- Cambiar estado: Activa/Pausada/Cancelada
+
 - Renovar manualmente (genera nueva factura)
-- Filtros por estado y búsqueda avanzada
 
-### 🧾 Sistema de Facturas
+### 5. Acceder al Sistema- Filtros por estado y búsqueda avanzada
 
-- Ver todas las facturas con estado
+
+
+- **Frontend:** http://localhost:3000### 🧾 Sistema de Facturas
+
+- **Backend API:** http://localhost:8080/kdevbill
+
+- **Swagger Docs:** http://localhost:8080/swagger-ui.html- Ver todas las facturas con estado
+
 - Modal de detalle con líneas de factura
-- Registrar pagos con método seleccionable
+
+### 6. Credenciales de Prueba- Registrar pagos con método seleccionable
+
 - Filtros por estado (Abiertas/Pagadas/Anuladas)
-- Indicadores de vencimiento
 
-### 💳 Historial de Pagos
+El sistema incluye datos de prueba precargados:- Indicadores de vencimiento
 
-- Ver todos los pagos registrados
+
+
+**Administrador:**### 💳 Historial de Pagos
+
+- Username: `admin`
+
+- Password: `admin123`- Ver todos los pagos registrados
+
 - Modal de detalle completo
-- Filtros por estado (Exitoso/Fallido)
-- Filtros por método (Tarjeta/Transferencia/Efectivo)
-- Visualización de referencias de transacción
 
-## 🎨 Características de UI/UX
+**Usuario Regular:**- Filtros por estado (Exitoso/Fallido)
 
-✨ **Diseño Moderno y Responsive**
+- Username: `user`- Filtros por método (Tarjeta/Transferencia/Efectivo)
 
-- TailwindCSS con componentes personalizados
-- Optimizado para mobile, tablet y desktop
-- Sidebar colapsable
-- Navbar con información del usuario
+- Password: `user123`- Visualización de referencias de transacción
 
-⚡ **Estados de Carga**
 
-- Skeleton loaders en tablas
+
+---## 🎨 Características de UI/UX
+
+
+
+## 📖 Documentación Adicional✨ **Diseño Moderno y Responsive**
+
+
+
+### Backend- TailwindCSS con componentes personalizados
+
+Para más detalles sobre la API, endpoints y configuración del backend:- Optimizado para mobile, tablet y desktop
+
+- Ver: [`backend/README.md`](backend/README.md)- Sidebar colapsable
+
+- Documentación interactiva: http://localhost:8080/swagger-ui.html- Navbar con información del usuario
+
+
+
+### Frontend⚡ **Estados de Carga**
+
+Para más detalles sobre componentes, arquitectura y configuración del frontend:
+
+- Ver: [`frontend/README.md`](frontend/README.md)- Skeleton loaders en tablas
+
 - Loading spinners en botones
-- Estados vacíos con call-to-action
+
+---- Estados vacíos con call-to-action
+
 - Feedback visual inmediato
+
+## 🏗️ Arquitectura del Sistema
 
 🔔 **Notificaciones Toast**
 
-- Notificaciones de éxito en verde
-- Notificaciones de error en rojo
-- Animaciones suaves
-- Auto-dismiss configurado
-
-🎭 **Modales Reutilizables**
-
-- Backdrop con blur
-- Animaciones de entrada/salida
-- Click fuera para cerrar
-- Tamaños configurables (sm, md, lg, xl)
-
-## 🏗️ Arquitectura del Proyecto
-
 ```
-kdevbill-frontend/
-├── app/                          # Next.js App Router
-│   ├── (auth)/                  # Grupo de rutas de autenticación
-│   │   └── login/
-│   ├── (dashboard)/             # Grupo de rutas del dashboard
-│   │   ├── layout.tsx          # Layout con Sidebar y Navbar
-│   │   ├── page.tsx            # Dashboard principal
-│   │   └── dashboard/          # Rutas del dashboard
-│   │       ├── customers/
-│   │       ├── plans/
-│   │       ├── subscriptions/
-│   │       ├── invoices/
-│   │       └── payments/
-│   └── globals.css
-├── components/
-│   ├── layout/                  # Componentes de layout
-│   │   ├── Navbar.tsx
+
+┌─────────────────────────────────────────────────────────────┐- Notificaciones de éxito en verde
+
+│                      FRONTEND (Next.js)                     │- Notificaciones de error en rojo
+
+│                    http://localhost:3000                    │- Animaciones suaves
+
+│                                                             │- Auto-dismiss configurado
+
+│  - Dashboard con métricas                                   │
+
+│  - Gestión de clientes, planes, suscripciones              │🎭 **Modales Reutilizables**
+
+│  - Sistema de facturas y pagos                             │
+
+└─────────────────────┬───────────────────────────────────────┘- Backdrop con blur
+
+                      │- Animaciones de entrada/salida
+
+                      │ REST API (JWT Auth)- Click fuera para cerrar
+
+                      │ http://localhost:8080/kdevbill- Tamaños configurables (sm, md, lg, xl)
+
+                      ▼
+
+┌─────────────────────────────────────────────────────────────┐## 🏗️ Arquitectura del Proyecto
+
+│                   BACKEND (Spring Boot)                     │
+
+│                    http://localhost:8080                    │```
+
+│                                                             │kdevbill-frontend/
+
+│  - API RESTful                                              │├── app/                          # Next.js App Router
+
+│  - Seguridad JWT                                            ││   ├── (auth)/                  # Grupo de rutas de autenticación
+
+│  - Lógica de negocio                                        ││   │   └── login/
+
+└─────────────────────┬───────────────────────────────────────┘│   ├── (dashboard)/             # Grupo de rutas del dashboard
+
+                      ││   │   ├── layout.tsx          # Layout con Sidebar y Navbar
+
+                      │ JDBC / JPA│   │   ├── page.tsx            # Dashboard principal
+
+                      ▼│   │   └── dashboard/          # Rutas del dashboard
+
+┌─────────────────────────────────────────────────────────────┐│   │       ├── customers/
+
+│                  BASE DE DATOS (PostgreSQL)                 ││   │       ├── plans/
+
+│                    localhost:5432/kdevbill                  ││   │       ├── subscriptions/
+
+│                                                             ││   │       ├── invoices/
+
+│  - Usuarios y autenticación                                 ││   │       └── payments/
+
+│  - Clientes y planes                                        ││   └── globals.css
+
+│  - Suscripciones, facturas y pagos                         │├── components/
+
+└─────────────────────────────────────────────────────────────┘│   ├── layout/                  # Componentes de layout
+
+```│   │   ├── Navbar.tsx
+
 │   │   └── Sidebar.tsx
-│   └── ui/                      # Componentes reutilizables
+
+---│   └── ui/                      # Componentes reutilizables
+
 │       ├── LoadingButton.tsx
-│       └── Modal.tsx
+
+## 🧪 Testing│       └── Modal.tsx
+
 ├── services/                     # Servicios de API
-│   ├── auth.service.ts
-│   ├── customer.service.ts
-│   ├── plan.service.ts
-│   ├── subscription.service.ts
-│   ├── invoice.service.ts
+
+### Backend│   ├── auth.service.ts
+
+```bash│   ├── customer.service.ts
+
+cd backend│   ├── plan.service.ts
+
+./gradlew test│   ├── subscription.service.ts
+
+```│   ├── invoice.service.ts
+
 │   └── payment.service.ts
-├── store/                        # Estado global
-│   └── auth.store.ts            # Zustand store
-├── lib/                          # Utilidades
-│   ├── api.ts                   # Configuración de Axios
-│   └── schemas.ts               # Tipos y schemas de Zod
+
+### Frontend├── store/                        # Estado global
+
+```bash│   └── auth.store.ts            # Zustand store
+
+cd frontend├── lib/                          # Utilidades
+
+npm run test│   ├── api.ts                   # Configuración de Axios
+
+```│   └── schemas.ts               # Tipos y schemas de Zod
+
 └── middleware.ts                 # Protección de rutas
-```
 
-## 🔧 Configuración Técnica
+---```
 
-### Axios con Interceptores
 
-```typescript
-// Request: Añade token automáticamente
-api.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().token;
+
+## 📦 Deployment## 🔧 Configuración Técnica
+
+
+
+### Backend (JAR)### Axios con Interceptores
+
+```bash
+
+cd backend```typescript
+
+./gradlew bootJar// Request: Añade token automáticamente
+
+java -jar build/libs/kdevbill-api-0.0.1-SNAPSHOT.jarapi.interceptors.request.use((config) => {
+
+```  const token = useAuthStore.getState().token;
+
   if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
 
-// Response: Maneja 401 automáticamente
+### Frontend (Producción)    config.headers.Authorization = `Bearer ${token}`;
+
+```bash  }
+
+cd frontend  return config;
+
+npm run build});
+
+npm start
+
+```// Response: Maneja 401 automáticamente
+
 api.interceptors.response.use(
-  (response) => response,
+
+---  (response) => response,
+
   (error) => {
-    if (error.response?.status === 401) {
+
+## 🛠️ Stack Tecnológico Completo    if (error.response?.status === 401) {
+
       useAuthStore.getState().logout();
-      window.location.href = "/login";
-    }
-    return Promise.reject(error);
-  }
-);
-```
 
-### Middleware de Protección
+| Componente | Tecnología |      window.location.href = "/login";
 
-```typescript
-// Protege todas las rutas /dashboard/*
-// Redirige a /login si no hay token
-// Guarda token en cookie para server-side checks
-```
+|------------|------------|    }
 
-### Validación con Zod
+| **Backend Framework** | Spring Boot 3.x |    return Promise.reject(error);
 
-```typescript
+| **Lenguaje Backend** | Java 17 |  }
+
+| **Seguridad** | Spring Security + JWT |);
+
+| **Base de Datos** | PostgreSQL 14+ |```
+
+| **ORM** | Spring Data JPA |
+
+| **Migraciones** | Flyway |### Middleware de Protección
+
+| **Build Tool Backend** | Gradle |
+
+| **Frontend Framework** | Next.js 16 |```typescript
+
+| **UI Library** | React 19 |// Protege todas las rutas /dashboard/*
+
+| **Lenguaje Frontend** | TypeScript |// Redirige a /login si no hay token
+
+| **Estilos** | TailwindCSS |// Guarda token en cookie para server-side checks
+
+| **Estado Global** | Zustand |```
+
+| **HTTP Client** | Axios |
+
+| **Validación** | Zod + React Hook Form |### Validación con Zod
+
+
+
+---```typescript
+
 const CustomerSchema = z.object({
-  name: z.string().min(3, "Mínimo 3 caracteres"),
+
+## 👨‍💻 Desarrollador  name: z.string().min(3, "Mínimo 3 caracteres"),
+
   email: z.string().email("Email inválido"),
-  phone: z.string().min(10, "Mínimo 10 caracteres"),
-  address: z.string().optional(),
-});
+
+**Leonardo Salazar**    phone: z.string().min(10, "Mínimo 10 caracteres"),
+
+Prueba Técnica - Kruger Corporation    address: z.string().optional(),
+
+Noviembre 2025});
+
 ```
+
+---
 
 ## 🐛 Solución de Problemas
 
+## 📝 Licencia
+
 ### Backend no conecta
+
+Este proyecto fue desarrollado como parte de una prueba técnica para Kruger Corporation.
 
 - ✅ Verifica que el backend esté en `http://localhost:8080`
 - ✅ Verifica que la ruta base sea `/kdevbill` (no `/kdevbil`)
@@ -463,3 +737,4 @@ La aplicación estará disponible en `http://localhost:3000`
 ---
 
 **Desarrollado para Kruger Corporation** - Evaluación Técnica Semi Senior Fullstack 🚀
+`````
