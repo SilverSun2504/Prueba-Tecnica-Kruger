@@ -5,39 +5,33 @@ import { z } from 'zod';
 type PlanFormInputs = z.infer<typeof PlanSchema>;
 
 export const planService = {
-  // Obtener todos los planes
   getAll: async (): Promise<Plan[]> => {
     try {
       const response = await api.get<Plan[]>('/plans');
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
-        // Silencioso: endpoint no implementado, devolver datos vacíos
         return [];
       }
       throw error;
     }
   },
 
-  // Obtener un plan por ID
   getById: async (id: number): Promise<Plan> => {
     const response = await api.get<Plan>(`/plans/${id}`);
     return response.data;
   },
 
-  // Crear un nuevo plan (solo ADMIN)
   create: async (data: PlanFormInputs): Promise<Plan> => {
     const response = await api.post<Plan>('/plans', data);
     return response.data;
   },
 
-  // Actualizar un plan (solo ADMIN)
   update: async (id: number, data: Partial<PlanFormInputs>): Promise<Plan> => {
     const response = await api.put<Plan>(`/plans/${id}`, data);
     return response.data;
   },
 
-  // Deshabilitar un plan (solo ADMIN)
   delete: async (id: number): Promise<void> => {
     await api.delete(`/plans/${id}`);
   },

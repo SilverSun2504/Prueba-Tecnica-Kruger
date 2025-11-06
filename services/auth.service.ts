@@ -23,22 +23,20 @@ type RegisterFormInputs = z.infer<typeof RegisterSchema>;
 
 export const authService = {
   login: async (credentials: LoginFormInputs): Promise<LoginResponse> => {
-    // El backend espera exactamente username y password
     const backendCredentials = {
-      username: credentials.email, // Enviamos el email como username
+      username: credentials.email,
       password: credentials.password,
     };
 
     try {
       const response = await api.post<BackendLoginResponse>('/auth/login', backendCredentials);
       
-      // Transformamos la respuesta del backend al formato que espera nuestro frontend
       const transformedResponse: LoginResponse = {
         token: response.data.token,
         user: {
-          id: 1, // Temporal, debería venir del backend
+          id: 1,
           username: response.data.username,
-          email: credentials.email, // Usamos el email que enviamos
+          email: credentials.email,
           role: response.data.role as 'ADMIN' | 'USER',
         }
       };
@@ -57,7 +55,6 @@ export const authService = {
     return response.data;
   },
 
-  // Obtener perfil del usuario actual
   getProfile: async (): Promise<User> => {
     const response = await api.get<User>('/auth/me');
     return response.data;

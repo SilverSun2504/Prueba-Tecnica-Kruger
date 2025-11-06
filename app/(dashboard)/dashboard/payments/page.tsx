@@ -53,13 +53,14 @@ export default function PaymentsPage() {
   // Filter payments
   const filteredPayments = payments.filter((payment) => {
     const matchesSearch =
-      payment.invoice.subscription.customer.name
-        .toLowerCase()
+      payment.invoice?.subscription?.customer?.name
+        ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      payment.invoice.subscription.customer.email
-        .toLowerCase()
+      payment.invoice?.subscription?.customer?.email
+        ?.toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
-      payment.reference.toLowerCase().includes(searchTerm.toLowerCase());
+      payment.reference?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      false;
 
     const matchesStatus =
       statusFilter === "ALL" || payment.status === statusFilter;
@@ -310,10 +311,12 @@ export default function PaymentsPage() {
                         </div>
                         <div className="ml-4">
                           <div className="text-sm font-medium text-gray-900">
-                            {payment.invoice.subscription.customer.name}
+                            {payment.invoice?.subscription?.customer?.name ||
+                              "N/A"}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {payment.invoice.subscription.customer.email}
+                            {payment.invoice?.subscription?.customer?.email ||
+                              "N/A"}
                           </div>
                         </div>
                       </div>
@@ -414,10 +417,12 @@ export default function PaymentsPage() {
               </h4>
               <div className="bg-white border rounded-lg p-4">
                 <p className="font-medium text-gray-900">
-                  {selectedPayment.invoice.subscription.customer.name}
+                  {selectedPayment.invoice?.subscription?.customer?.name ||
+                    "N/A"}
                 </p>
                 <p className="text-gray-600">
-                  {selectedPayment.invoice.subscription.customer.email}
+                  {selectedPayment.invoice?.subscription?.customer?.email ||
+                    "N/A"}
                 </p>
               </div>
             </div>
@@ -436,7 +441,7 @@ export default function PaymentsPage() {
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-gray-600">Plan:</span>
                   <span className="text-gray-900">
-                    {selectedPayment.invoice.subscription.plan.name}
+                    {selectedPayment.invoice?.subscription?.plan?.name || "N/A"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center mb-2">

@@ -64,7 +64,6 @@ export const LoadingButton: React.FC<LoadingButtonProps> = ({
   );
 };
 
-// Componente de carga para listas
 export const LoadingSkeleton: React.FC<{ lines?: number }> = ({
   lines = 3,
 }) => (
@@ -75,7 +74,6 @@ export const LoadingSkeleton: React.FC<{ lines?: number }> = ({
   </div>
 );
 
-// Componente para estados vacíos
 interface EmptyStateProps {
   title: string;
   description?: string;

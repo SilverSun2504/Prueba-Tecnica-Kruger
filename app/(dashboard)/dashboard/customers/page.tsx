@@ -7,7 +7,8 @@ import { toast } from "react-hot-toast";
 
 import { useAuthStore } from "@/store/auth.store";
 import { customerService } from "@/services/customer.service";
-import { Customer, CustomerSchema } from "@/lib/schemas";
+import { userService } from "@/services/user.service";
+import { Customer, CustomerSchema, User } from "@/lib/schemas";
 import { z } from "zod";
 
 type CustomerFormInputs = z.infer<typeof CustomerSchema>;
@@ -16,6 +17,8 @@ export default function CustomersPage() {
   const isAdmin = useAuthStore((state) => state.isAdmin());
   const user = useAuthStore((state) => state.user);
   const [customers, setCustomers] = useState<Customer[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
@@ -34,8 +37,21 @@ export default function CustomersPage() {
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      const data = await customerService.getAll();
-      setCustomers(data);
+
+      // Cargar clientes (obligatorio)
+      const customersData = await customerService.getAll();
+      setCustomers(customersData);
+
+      // Cargar usuarios solo si es admin (opcional, no bloquea si falla)
+      if (isAdmin) {
+        try {
+          const usersData = await userService.getAll();
+          setUsers(usersData);
+        } catch (error) {
+          console.warn("No se pudieron cargar los usuarios:", error);
+          // No mostrar error al usuario, el selector simplemente estará vacío
+        }
+      }
     } catch (error) {
       toast.error("Error al cargar clientes");
     } finally {
@@ -49,7 +65,16 @@ export default function CustomersPage() {
 
   // Handle form submission
   const onSubmit = async (data: CustomerFormInputs) => {
-    if (!user?.id) {
+    // Determinar el userId a usar
+    let targetUserId: number;
+
+    if (isAdmin && selectedUserId) {
+      // Admin seleccionó un usuario específico
+      targetUserId = selectedUserId;
+    } else if (user?.id) {
+      // Usuario normal o admin sin selección (usa su propio ID)
+      targetUserId = user.id;
+    } else {
       toast.error("Error: No se pudo obtener el ID del usuario");
       return;
     }
@@ -58,7 +83,7 @@ export default function CustomersPage() {
       // Agregar el userId a los datos
       const dataWithUserId = {
         ...data,
-        userId: user.id,
+        userId: targetUserId,
       };
 
       if (editingCustomer) {
@@ -117,6 +142,7 @@ export default function CustomersPage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingCustomer(null);
+    setSelectedUserId(null);
     reset();
   };
 
@@ -416,6 +442,36 @@ export default function CustomersPage() {
                     </p>
                   )}
                 </div>
+
+                {/* Campo Usuario - Solo para Admins al crear nuevo cliente */}
+                {isAdmin && !editingCustomer && (
+                  <div>
+                    <label
+                      htmlFor="userId"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Asignar a Usuario
+                    </label>
+                    <select
+                      id="userId"
+                      value={selectedUserId || ""}
+                      onChange={(e) =>
+                        setSelectedUserId(Number(e.target.value) || null)
+                      }
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="">Seleccionar usuario...</option>
+                      {users.map((u) => (
+                        <option key={u.id} value={u.id}>
+                          {u.username} ({u.role})
+                        </option>
+                      ))}
+                    </select>
+                    <p className="mt-1 text-xs text-gray-500">
+                      Selecciona el usuario al que pertenecerá este cliente
+                    </p>
+                  </div>
+                )}
 
                 {/* Botones */}
                 <div className="flex justify-end space-x-3 mt-6">

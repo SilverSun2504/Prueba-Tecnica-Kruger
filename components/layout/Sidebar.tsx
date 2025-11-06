@@ -1,4 +1,3 @@
-// src/components/layout/Sidebar.tsx
 "use client";
 
 import Link from "next/link";
@@ -28,13 +27,13 @@ const Sidebar = () => {
       href: "/dashboard/customers",
       label: "Clientes",
       icon: Users,
-      adminOnly: false, // Los usuarios pueden ver sus propios clientes
+      adminOnly: false,
     },
     {
       href: "/dashboard/plans",
       label: "Planes",
       icon: Layers,
-      adminOnly: false, // Los usuarios pueden ver planes para suscribirse
+      adminOnly: false,
     },
     {
       href: "/dashboard/subscriptions",
@@ -69,7 +68,6 @@ const Sidebar = () => {
       </div>
       <nav className="flex-1 px-2 py-4 space-y-2">
         {navLinks.map((link) => {
-          // Si el link es solo para admin y el usuario no es admin, no mostrar
           if (link.adminOnly && user?.role !== "ADMIN") {
             return null;
           }
