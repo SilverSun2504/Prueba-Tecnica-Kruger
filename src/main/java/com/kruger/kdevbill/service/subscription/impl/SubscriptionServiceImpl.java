@@ -94,6 +94,21 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .build();
         Subscription savedSubscription = subscriptionRepository.save(subscription);
         log.info("Subscription created with ID: {} for customer ID: {}", savedSubscription.getId(), customer.getId());
+
+        // Generar la primera factura automáticamente
+        LocalDateTime issuedAt = LocalDateTime.now();
+        LocalDate dueDate = issuedAt.toLocalDate().plusDays(7); // Vence en 7 días
+        Invoice initialInvoice = Invoice.builder()
+                .subscription(savedSubscription)
+                .amount(plan.getPrice())
+                .status(InvoiceStatus.OPEN)
+                .issuedAt(issuedAt)
+                .dueDate(dueDate)
+                .build();
+        invoiceRepository.save(initialInvoice);
+        log.info("Initial invoice created for subscription ID: {} with amount: {}",
+                savedSubscription.getId(), plan.getPrice());
+
         return subscriptionMapper.toSubscriptionResponse(savedSubscription);
     }
 
@@ -103,25 +118,31 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         User authenticatedUser = securityHelper.getAuthenticatedUser();
         log.info("=== GET MY SUBSCRIPTIONS START ===");
         log.info("User: {} (ID: {})", authenticatedUser.getUsername(), authenticatedUser.getId());
+        log.info("User details - Username length: {}, Username bytes: {}",
+                authenticatedUser.getUsername().length(),
+                java.util.Arrays.toString(authenticatedUser.getUsername().getBytes()));
 
         // Intentar múltiples estrategias para encontrar el customer
         Customer customer = null;
 
         // Estrategia 1: Por username del owner
+        log.info("Trying Strategy 1: findByOwnerUsername with username: '{}'", authenticatedUser.getUsername());
         customer = customerRepository.findByOwnerUsername(authenticatedUser.getUsername())
                 .orElse(null);
 
         if (customer != null) {
             log.info("Strategy 1 SUCCESS: Found customer by username. Customer ID: {}", customer.getId());
         } else {
-            log.warn("Strategy 1 FAILED: Customer not found by username: {}", authenticatedUser.getUsername());
+            log.warn("Strategy 1 FAILED: Customer not found by username: '{}'", authenticatedUser.getUsername());
 
             // Estrategia 2: Por ID del owner
+            log.info("Trying Strategy 2: findByOwnerId with ID: {}", authenticatedUser.getId());
             customer = customerRepository.findByOwnerId(authenticatedUser.getId())
                     .orElse(null);
 
             if (customer != null) {
-                log.info("Strategy 2 SUCCESS: Found customer by owner ID. Customer ID: {}", customer.getId());
+                log.info("Strategy 2 SUCCESS: Found customer by owner ID. Customer ID: {}, Customer name: {}",
+                        customer.getId(), customer.getName());
             } else {
                 log.warn("Strategy 2 FAILED: Customer not found by owner ID: {}", authenticatedUser.getId());
 
@@ -141,7 +162,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     allCustomers.forEach(c -> log.error("  - Customer ID: {}, Owner ID: {}, Owner Username: {}",
                             c.getId(), c.getOwner().getId(), c.getOwner().getUsername()));
 
-                    return List.of();
+                    // Lanzar excepción más descriptiva en lugar de retornar array vacío
+                    throw new RuntimeException(
+                            "No customer profile found for user: " + authenticatedUser.getUsername() +
+                                    ". Please create a customer profile first or contact administrator.");
                 }
             }
         }

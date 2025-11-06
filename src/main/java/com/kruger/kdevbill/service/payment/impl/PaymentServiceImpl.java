@@ -30,8 +30,14 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional(readOnly = true)
     public List<PaymentResponse> getMyPayments() {
         User authenticatedUser = securityHelper.getAuthenticatedUser();
-        Customer customer = customerRepository.findByOwner(authenticatedUser)
-                .orElseThrow(() -> new RuntimeException("Customer profile not found"));
+
+        // Usar findByOwnerId en lugar de findByOwner para evitar problemas de
+        // comparación de instancias
+        Customer customer = customerRepository.findByOwnerId(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException(
+                        "No customer profile found for user: " + authenticatedUser.getUsername() +
+                                ". Please create a customer profile first or contact administrator."));
+
         return paymentRepository.findByInvoice_Subscription_CustomerId(customer.getId()).stream()
                 .map(paymentMapper::toPaymentResponse)
                 .collect(Collectors.toList());

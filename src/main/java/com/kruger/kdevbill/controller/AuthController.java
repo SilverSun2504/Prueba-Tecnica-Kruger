@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -65,5 +66,31 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/debug/customers")
+    @Operation(summary = "DEBUG: Ver todos los customers", description = "Endpoint de debugging para ver todos los customers y sus owners")
+    public ResponseEntity<Map<String, Object>> debugCustomers() {
+        Map<String, Object> debug = new HashMap<>();
+
+        try {
+            var customers = authService.getAllCustomersDebug();
+            debug.put("total_customers", customers.size());
+            debug.put("customers", customers);
+        } catch (Exception e) {
+            debug.put("error", e.getMessage());
+        }
+
+        return ResponseEntity.ok(debug);
+    }
+
+    @PostMapping("/admin/migrate-customers")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "ADMIN: Migrar usuarios legacy", description = "Crea customer profiles para todos los usuarios USER que no tengan uno (solo ADMIN)")
+    @ApiResponse(responseCode = "200", description = "Migración completada exitosamente")
+    @ApiResponse(responseCode = "403", description = "Acceso denegado - Solo para administradores")
+    public ResponseEntity<Map<String, Object>> migrateCustomersForLegacyUsers() {
+        Map<String, Object> result = authService.createMissingCustomers();
+        return ResponseEntity.ok(result);
     }
 }

@@ -246,7 +246,13 @@ Content-Type: application/json
 }
 ```
 
+````
+
 > **Nota:** Si el username contiene "admin", se asigna rol `ADMIN`, de lo contrario `USER`.
+>
+> **Importante:** Los usuarios con rol `USER` tendrán un **customer profile creado automáticamente** al registrarse. Los usuarios `ADMIN` deben crear su customer profile manualmente usando `POST /kdevbill/customers`.
+
+### 2. Iniciar Sesión
 
 ### 2. Login
 
@@ -258,7 +264,7 @@ Content-Type: application/json
   "username": "admin123",
   "password": "securePassword123"
 }
-```
+````
 
 **Respuesta:**
 

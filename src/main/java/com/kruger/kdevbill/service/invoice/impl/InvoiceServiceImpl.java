@@ -19,6 +19,7 @@ import com.kruger.kdevbill.security.SecurityHelper;
 import com.kruger.kdevbill.service.invoice.InvoiceService;
 import com.kruger.kdevbill.service.subscription.impl.BillingHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InvoiceServiceImpl implements InvoiceService {
@@ -44,12 +46,34 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional(readOnly = true)
     public List<InvoiceResponse> getMyInvoices() {
+        log.info("=== GET MY INVOICES START ===");
         User authenticatedUser = securityHelper.getAuthenticatedUser();
-        Customer customer = customerRepository.findByOwner(authenticatedUser)
-                .orElseThrow(() -> new RuntimeException("Customer profile not found"));
-        return invoiceRepository.findBySubscription_CustomerId(customer.getId()).stream()
+        log.info("User: {} (ID: {})", authenticatedUser.getUsername(), authenticatedUser.getId());
+
+        // Usar findByOwnerId en lugar de findByOwner para evitar problemas de
+        // comparación de instancias
+        Customer customer = customerRepository.findByOwnerId(authenticatedUser.getId())
+                .orElseThrow(() -> new RuntimeException(
+                        "No customer profile found for user: " + authenticatedUser.getUsername() +
+                                ". Please create a customer profile first or contact administrator."));
+
+        log.info("Found customer ID: {} for user: {}", customer.getId(), authenticatedUser.getUsername());
+
+        List<Invoice> invoices = invoiceRepository.findBySubscription_CustomerId(customer.getId());
+        log.info("Found {} invoices for customer ID: {}", invoices.size(), customer.getId());
+
+        if (!invoices.isEmpty()) {
+            log.info("Invoice details:");
+            invoices.forEach(inv -> log.info("  - Invoice ID: {}, Amount: {}, Status: {}, Subscription ID: {}",
+                    inv.getId(), inv.getAmount(), inv.getStatus(), inv.getSubscription().getId()));
+        }
+
+        List<InvoiceResponse> response = invoices.stream()
                 .map(invoiceMapper::toInvoiceResponse)
                 .collect(Collectors.toList());
+
+        log.info("=== GET MY INVOICES END === Returning {} invoices", response.size());
+        return response;
     }
 
     @Override
@@ -80,12 +104,11 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoiceRepository.save(invoice);
             Subscription subscription = invoice.getSubscription();
             if (subscription.getNextBillingDate() != null &&
-                subscription.getNextBillingDate().isEqual(invoice.getDueDate().minusDays(7))) {
-                
+                    subscription.getNextBillingDate().isEqual(invoice.getDueDate().minusDays(7))) {
+
                 LocalDate newNextBillingDate = billingHelper.calculateNextBillingDate(
-                        subscription.getNextBillingDate(), 
-                        subscription.getPlan()
-                );
+                        subscription.getNextBillingDate(),
+                        subscription.getPlan());
                 subscription.setNextBillingDate(newNextBillingDate);
                 subscriptionRepository.save(subscription);
             }
