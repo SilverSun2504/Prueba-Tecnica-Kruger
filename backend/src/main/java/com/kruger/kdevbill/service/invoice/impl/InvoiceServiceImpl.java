@@ -46,34 +46,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     @Override
     @Transactional(readOnly = true)
     public List<InvoiceResponse> getMyInvoices() {
-        log.info("=== GET MY INVOICES START ===");
         User authenticatedUser = securityHelper.getAuthenticatedUser();
-        log.info("User: {} (ID: {})", authenticatedUser.getUsername(), authenticatedUser.getId());
 
-        // Usar findByOwnerId en lugar de findByOwner para evitar problemas de
-        // comparación de instancias
+        // Búsqueda del customer por ID del owner para evitar problemas de comparación
+        // de instancias
         Customer customer = customerRepository.findByOwnerId(authenticatedUser.getId())
                 .orElseThrow(() -> new RuntimeException(
                         "No customer profile found for user: " + authenticatedUser.getUsername() +
                                 ". Please create a customer profile first or contact administrator."));
 
-        log.info("Found customer ID: {} for user: {}", customer.getId(), authenticatedUser.getUsername());
-
         List<Invoice> invoices = invoiceRepository.findBySubscription_CustomerId(customer.getId());
-        log.info("Found {} invoices for customer ID: {}", invoices.size(), customer.getId());
 
-        if (!invoices.isEmpty()) {
-            log.info("Invoice details:");
-            invoices.forEach(inv -> log.info("  - Invoice ID: {}, Amount: {}, Status: {}, Subscription ID: {}",
-                    inv.getId(), inv.getAmount(), inv.getStatus(), inv.getSubscription().getId()));
-        }
-
-        List<InvoiceResponse> response = invoices.stream()
+        return invoices.stream()
                 .map(invoiceMapper::toInvoiceResponse)
                 .collect(Collectors.toList());
-
-        log.info("=== GET MY INVOICES END === Returning {} invoices", response.size());
-        return response;
     }
 
     @Override
