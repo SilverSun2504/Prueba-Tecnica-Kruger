@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kdevbill API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 0 5px 5px 0;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+
+        .get {
+            background-color: #61affe;
+        }
+
+        .post {
+            background-color: #49cc90;
+        }
+
+        .put {
+            background-color: #fca130;
+        }
+
+        .delete {
+            background-color: #f93e3e;
+        }
+
+        .section {
+            margin-bottom: 2rem;
+        }
+
+        .code {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>🚀 Kdevbill API</h1>
+        <p>Documentación completa de la API REST para el sistema de facturación Kdevbill</p>
+        <p><strong>Servidor:</strong> http://localhost:8080/kdevbill</p>
+    </div>
+
+    <div class="section">
+        <h2>🔐 Autenticación</h2>
+        <p>La API utiliza JWT (JSON Web Tokens) para la autenticación. Incluye el token en el header:</p>
+        <div class="code">
+            Authorization: Bearer &lt;your-jwt-token&gt;
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👤 Autenticación</h2>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/auth/register</strong>
+            <p>Registrar nuevo usuario</p>
+            <div class="code">
+                {
+                "email": "user@example.com",
+                "password": "password123",
+                "firstName": "Juan",
+                "lastName": "Pérez",
+                "role": "USER"
+                }
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/auth/login</strong>
+            <p>Iniciar sesión</p>
+            <div class="code">
+                {
+                "email": "user@example.com",
+                "password": "password123"
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🏢 Clientes</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/customers</strong>
+            <p>Obtener todos los clientes</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/customers/{id}</strong>
+            <p>Obtener cliente por ID</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/customers</strong>
+            <p>Crear nuevo cliente</p>
+            <div class="code">
+                {
+                "name": "Empresa ABC",
+                "email": "contacto@abc.com",
+                "phone": "+1234567890",
+                "address": "Calle 123, Ciudad"
+                }
+            </div>
+        </div>
+
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <strong>/customers/{id}</strong>
+            <p>Actualizar cliente</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <strong>/customers/{id}</strong>
+            <p>Eliminar cliente</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📄 Facturas</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/invoices</strong>
+            <p>Obtener todas las facturas</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/invoices/{id}</strong>
+            <p>Obtener factura por ID</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/invoices</strong>
+            <p>Crear nueva factura</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method put">PUT</span>
+            <strong>/invoices/{id}</strong>
+            <p>Actualizar factura</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method delete">DELETE</span>
+            <strong>/invoices/{id}</strong>
+            <p>Eliminar factura</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💰 Pagos</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/payments</strong>
+            <p>Obtener todos los pagos</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/payments</strong>
+            <p>Registrar nuevo pago</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Planes</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/plans</strong>
+            <p>Obtener todos los planes</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/plans</strong>
+            <p>Crear nuevo plan</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>🔄 Suscripciones</h2>
+
+        <div class="endpoint">
+            <span class="method get">GET</span>
+            <strong>/subscriptions</strong>
+            <p>Obtener todas las suscripciones</p>
+        </div>
+
+        <div class="endpoint">
+            <span class="method post">POST</span>
+            <strong>/subscriptions</strong>
+            <p>Crear nueva suscripción</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Códigos de Respuesta</h2>
+        <ul>
+            <li><strong>200</strong> - OK: Operación exitosa</li>
+            <li><strong>201</strong> - Created: Recurso creado exitosamente</li>
+            <li><strong>400</strong> - Bad Request: Datos inválidos</li>
+            <li><strong>401</strong> - Unauthorized: No autenticado</li>
+            <li><strong>403</strong> - Forbidden: No autorizado</li>
+            <li><strong>404</strong> - Not Found: Recurso no encontrado</li>
+            <li><strong>500</strong> - Internal Server Error: Error del servidor</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🧪 Probar la API</h2>
+        <p>Puedes probar la API usando herramientas como:</p>
+        <ul>
+            <li><strong>Postman</strong> - Cliente REST popular</li>
+            <li><strong>curl</strong> - Línea de comandos</li>
+            <li><strong>Thunder Client</strong> - Extensión de VS Code</li>
+        </ul>
+
+        <p><strong>Ejemplo con curl:</strong></p>
+        <div class="code">
+            curl -X POST http://localhost:8080/kdevbill/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"email": "user@example.com", "password": "password123"}'
+        </div>
+    </div>
+</body>
+
+</html>
