@@ -1,7 +1,6 @@
 import api from '@/lib/api';
 import { User } from '@/lib/schemas';
 
-// Usuarios conocidos del sistema (temporal hasta que el backend implemente GET /users)
 const KNOWN_USERS: User[] = [
   { id: 1, username: 'admin2', email: 'admin2@example.com', role: 'ADMIN' },
   { id: 2, username: 'user1', email: 'user1@example.com', role: 'USER' },
@@ -9,14 +8,12 @@ const KNOWN_USERS: User[] = [
 ];
 
 export const userService = {
-  // Obtener todos los usuarios (solo para ADMIN)
   getAll: async (): Promise<User[]> => {
     try {
       const response = await api.get<User[]>('/users');
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404 || error.response?.status === 403) {
-        // Endpoint no implementado o sin permisos, devolver usuarios conocidos
         console.warn(`Endpoint /users error ${error.response?.status}. Usando lista de usuarios conocidos.`);
         return KNOWN_USERS;
       }
@@ -25,7 +22,6 @@ export const userService = {
     }
   },
 
-  // Obtener un usuario por ID
   getById: async (id: number): Promise<User> => {
     const response = await api.get<User>(`/users/${id}`);
     return response.data;

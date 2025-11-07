@@ -7,12 +7,9 @@ export const paymentService = {
     try {
       const response = await api.get<PaymentRaw[]>('/payments');
       
-      // Si no hay pagos, devolver array vacío
       if (!response.data || response.data.length === 0) {
         return [];
       }
-      
-      // Estrategia simplificada: crear pagos con datos mínimos pero funcionales
       const paymentsWithInvoices: Payment[] = response.data.map((rawPayment) => {
         return {
           id: rawPayment.id,
@@ -63,8 +60,6 @@ export const paymentService = {
   getById: async (id: number): Promise<Payment> => {
     const response = await api.get<PaymentRaw>(`/payments/${id}`);
     const rawPayment = response.data;
-    
-    // Estrategia simplificada sin llamadas adicionales que puedan fallar
     return {
       id: rawPayment.id,
       invoice: {

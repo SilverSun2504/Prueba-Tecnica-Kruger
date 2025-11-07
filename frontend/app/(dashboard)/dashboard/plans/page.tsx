@@ -37,7 +37,6 @@ export default function PlansPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
 
-  // Form setup
   const {
     register,
     handleSubmit,
@@ -50,7 +49,6 @@ export default function PlansPage() {
     },
   });
 
-  // Fetch plans
   const fetchPlans = async () => {
     try {
       setLoading(true);
@@ -67,20 +65,16 @@ export default function PlansPage() {
     fetchPlans();
   }, []);
 
-  // Filter plans by search term
   const filteredPlans = plans.filter((plan) =>
     plan.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Handle form submission
   const onSubmit = async (data: PlanFormInputs) => {
     try {
       if (editingPlan) {
-        // Update existing plan
         await planService.update(editingPlan.id, data);
         toast.success("Plan actualizado exitosamente");
       } else {
-        // Create new plan
         await planService.create(data);
         toast.success("Plan creado exitosamente");
       }
@@ -93,7 +87,6 @@ export default function PlansPage() {
     }
   };
 
-  // Handle delete plan
   const handleDelete = async (id: number) => {
     if (!confirm("¿Estás seguro de que quieres deshabilitar este plan?"))
       return;
@@ -109,7 +102,6 @@ export default function PlansPage() {
     }
   };
 
-  // Handle modal actions
   const handleOpenModal = (plan?: Plan) => {
     if (plan) {
       setEditingPlan(plan);
@@ -137,7 +129,6 @@ export default function PlansPage() {
     reset();
   };
 
-  // Format price
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("es-US", {
       style: "currency",
@@ -145,7 +136,6 @@ export default function PlansPage() {
     }).format(price);
   };
 
-  // Get billing cycle text
   const getBillingCycleText = (cycle: "MONTHLY" | "QUARTERLY" | "YEARLY") => {
     switch (cycle) {
       case "MONTHLY":

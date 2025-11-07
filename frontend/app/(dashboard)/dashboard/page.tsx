@@ -91,7 +91,6 @@ export default function DashboardPage() {
           totalRevenue,
         });
       } catch (error) {
-        // Error handled silently
       } finally {
         setLoading(false);
       }

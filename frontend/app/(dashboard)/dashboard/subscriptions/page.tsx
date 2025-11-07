@@ -54,7 +54,6 @@ export default function SubscriptionsPage() {
   const [editingSubscription, setEditingSubscription] =
     useState<Subscription | null>(null);
 
-  // Form setup
   const {
     register,
     handleSubmit,
@@ -64,12 +63,10 @@ export default function SubscriptionsPage() {
     resolver: zodResolver(SubscriptionSchema),
   });
 
-  // Fetch all data
   const fetchData = async () => {
     try {
       setLoading(true);
 
-      // Obtener clientes y planes primero
       const [customersData, plansData] = await Promise.all([
         customerService.getAll(),
         planService.getAll(),
@@ -78,8 +75,6 @@ export default function SubscriptionsPage() {
       setCustomers(customersData);
       setPlans(plansData.filter((plan) => plan.active));
 
-      // Para admins: si hay un cliente seleccionado, obtener sus suscripciones
-      // Para usuarios normales: siempre obtener sus propias suscripciones
       if (isAdmin && selectedCustomerId !== "ALL") {
         const subscriptionsData = await subscriptionService.getByCustomer(
           selectedCustomerId as number
@@ -98,9 +93,8 @@ export default function SubscriptionsPage() {
 
   useEffect(() => {
     fetchData();
-  }, [selectedCustomerId]); // Re-fetch cuando cambie el cliente seleccionado
+  }, [selectedCustomerId]);
 
-  // Filter subscriptions
   const filteredSubscriptions = subscriptions.filter((subscription) => {
     const matchesSearch =
       subscription.customer.name
@@ -148,7 +142,6 @@ export default function SubscriptionsPage() {
     }
   };
 
-  // Handle status change
   const handleStatusChange = async (
     id: number,
     newStatus: "ACTIVE" | "PAUSED" | "CANCELED"
@@ -164,7 +157,6 @@ export default function SubscriptionsPage() {
     }
   };
 
-  // Handle renew subscription
   const handleRenew = async (id: number) => {
     try {
       await subscriptionService.renew(id);
@@ -177,7 +169,6 @@ export default function SubscriptionsPage() {
     }
   };
 
-  // Handle modal actions
   const handleOpenModal = (subscription?: Subscription) => {
     if (subscription) {
       setEditingSubscription(subscription);
@@ -201,7 +192,6 @@ export default function SubscriptionsPage() {
     reset();
   };
 
-  // Get status badge
   const getStatusBadge = (status: Subscription["status"]) => {
     const statusConfig = {
       ACTIVE: {

@@ -7,12 +7,10 @@ export const invoiceService = {
     try {
       const response = await api.get<InvoiceRaw[]>('/invoices');
       
-      // Si no hay facturas, devolver array vacío
       if (!response.data || response.data.length === 0) {
         return [];
       }
       
-      // Estrategia optimizada: obtener todas las subscripciones primero
       let allSubscriptions: Subscription[] = [];
       try {
         allSubscriptions = await subscriptionService.getAll();
@@ -20,27 +18,22 @@ export const invoiceService = {
         console.warn('Could not fetch all subscriptions, will try individual calls:', error);
       }
       
-      // Crear un mapa de subscripciones por ID para acceso rápido
       const subscriptionMap = new Map<number, Subscription>();
       allSubscriptions.forEach(sub => {
         subscriptionMap.set(sub.id, sub);
       });
       
-      // Procesar facturas
       const invoicesWithSubscriptions: Invoice[] = await Promise.all(
         response.data.map(async (rawInvoice) => {
           let subscription: Subscription;
           
-          // Intentar obtener de la caché primero
           if (subscriptionMap.has(rawInvoice.subscriptionId)) {
             subscription = subscriptionMap.get(rawInvoice.subscriptionId)!;
           } else {
-            // Si no está en caché, hacer llamada individual
             try {
               subscription = await subscriptionService.getById(rawInvoice.subscriptionId);
             } catch (error) {
               console.error(`Error fetching subscription ${rawInvoice.subscriptionId}:`, error);
-              // Crear subscription de fallback
               subscription = {
                 id: rawInvoice.subscriptionId,
                 customer: { 
@@ -100,7 +93,6 @@ export const invoiceService = {
       } as Invoice;
     } catch (error) {
       console.error(`Error fetching subscription ${rawInvoice.subscriptionId}:`, error);
-      // Devolver con subscription mínima si falla
       return {
         id: rawInvoice.id,
         subscription: {
@@ -124,7 +116,6 @@ export const invoiceService = {
     try {
       console.log(`Processing payment for invoice ${id} with method ${method}`);
       
-      // Usamos el formato más común: objeto en el body
       const response = await api.post(`/invoices/${id}/pay`, { method });
       console.log('Payment successful:', response);
       
@@ -137,7 +128,6 @@ export const invoiceService = {
         message: error.message
       });
       
-      // Mejor manejo del error para el usuario
       if (error.response?.status === 500) {
         throw new Error('Error interno del servidor. Por favor, contacta al administrador.');
       } else if (error.response?.status === 404) {
@@ -157,7 +147,6 @@ export const invoiceService = {
       return [];
     }
     
-    // Obtener datos de subscripciones para cada factura
     const invoicesWithSubscriptions: Invoice[] = await Promise.all(
       response.data.map(async (rawInvoice) => {
         try {

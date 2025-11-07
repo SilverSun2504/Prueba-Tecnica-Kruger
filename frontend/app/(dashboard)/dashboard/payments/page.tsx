@@ -32,7 +32,6 @@ export default function PaymentsPage() {
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
-  // Fetch payments
   const fetchPayments = async () => {
     try {
       setLoading(true);
@@ -49,7 +48,6 @@ export default function PaymentsPage() {
     fetchPayments();
   }, []);
 
-  // Filter payments
   const filteredPayments = payments.filter((payment) => {
     const matchesSearch =
       payment.invoice?.subscription?.customer?.name
@@ -69,7 +67,6 @@ export default function PaymentsPage() {
     return matchesSearch && matchesStatus && matchesMethod;
   });
 
-  // Get status badge
   const getStatusBadge = (status: Payment["status"]) => {
     const statusConfig = {
       SUCCESS: {
@@ -97,7 +94,6 @@ export default function PaymentsPage() {
     );
   };
 
-  // Get method badge
   const getMethodBadge = (method: Payment["method"]) => {
     const methodConfig = {
       CARD: { color: "bg-blue-100 text-blue-800", label: "Tarjeta" },

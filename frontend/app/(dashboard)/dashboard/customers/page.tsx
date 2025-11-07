@@ -23,7 +23,6 @@ export default function CustomersPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
 
-  // Form setup
   const {
     register,
     handleSubmit,
@@ -43,9 +42,7 @@ export default function CustomersPage() {
         try {
           const usersData = await userService.getAll();
           setUsers(usersData);
-        } catch (error) {
-          // El selector simplemente estará vacío
-        }
+        } catch (error) {}
       }
     } catch (error) {
       toast.error("Error al cargar clientes");
@@ -58,16 +55,12 @@ export default function CustomersPage() {
     fetchCustomers();
   }, []);
 
-  // Handle form submission
   const onSubmit = async (data: CustomerFormInputs) => {
-    // Determinar el userId a usar
     let targetUserId: number;
 
     if (isAdmin && selectedUserId) {
-      // Admin seleccionó un usuario específico
       targetUserId = selectedUserId;
     } else if (user?.id) {
-      // Usuario normal o admin sin selección (usa su propio ID)
       targetUserId = user.id;
     } else {
       toast.error("Error: No se pudo obtener el ID del usuario");
@@ -75,18 +68,15 @@ export default function CustomersPage() {
     }
 
     try {
-      // Agregar el userId a los datos
       const dataWithUserId = {
         ...data,
         userId: targetUserId,
       };
 
       if (editingCustomer) {
-        // Update existing customer
         await customerService.update(editingCustomer.id, dataWithUserId);
         toast.success("Cliente actualizado exitosamente");
       } else {
-        // Create new customer
         await customerService.create(dataWithUserId);
         toast.success("Cliente creado exitosamente");
       }
@@ -100,7 +90,6 @@ export default function CustomersPage() {
     }
   };
 
-  // Handle delete customer
   const handleDelete = async (id: number) => {
     if (!confirm("¿Estás seguro de que quieres eliminar este cliente?")) return;
 
@@ -115,7 +104,6 @@ export default function CustomersPage() {
     }
   };
 
-  // Handle open modal
   const openModal = (customer?: Customer) => {
     if (customer) {
       setEditingCustomer(customer);
@@ -134,7 +122,6 @@ export default function CustomersPage() {
     setIsModalOpen(true);
   };
 
-  // Handle close modal
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingCustomer(null);

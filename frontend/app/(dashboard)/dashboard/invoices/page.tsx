@@ -35,7 +35,6 @@ export default function InvoicesPage() {
   >("CARD");
   const [processingPayment, setProcessingPayment] = useState(false);
 
-  // Fetch invoices
   const fetchInvoices = async () => {
     try {
       setLoading(true);
@@ -52,7 +51,6 @@ export default function InvoicesPage() {
     fetchInvoices();
   }, []);
 
-  // Filter invoices
   const filteredInvoices = invoices.filter((invoice) => {
     const matchesSearch =
       invoice.subscription?.customer?.name
@@ -72,7 +70,6 @@ export default function InvoicesPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // Handle payment
   const handlePayment = async () => {
     if (!selectedInvoice) return;
 
@@ -92,7 +89,6 @@ export default function InvoicesPage() {
     }
   };
 
-  // Get status badge
   const getStatusBadge = (status: Invoice["status"]) => {
     const statusConfig = {
       OPEN: {
@@ -125,7 +121,6 @@ export default function InvoicesPage() {
     );
   };
 
-  // Check if invoice is overdue
   const isOverdue = (invoice: Invoice) => {
     return invoice.status === "OPEN" && new Date(invoice.dueDate) < new Date();
   };
