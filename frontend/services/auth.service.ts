@@ -43,9 +43,6 @@ export const authService = {
       
       return transformedResponse;
     } catch (error: any) {
-      console.error('Login failed:', error.response?.data);
-      console.error('Status:', error.response?.status);
-      console.error('Full error:', error);
       throw error;
     }
   },

@@ -33,31 +33,19 @@ export default function CustomersPage() {
     resolver: zodResolver(CustomerSchema),
   });
 
-  // Fetch customers
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-
-      console.log("Current user:", user);
-      console.log("Is admin:", isAdmin);
-
-      // Cargar clientes (obligatorio)
       const customersData = await customerService.getAll();
       setCustomers(customersData);
 
-      // Cargar usuarios solo si es admin (opcional, no bloquea si falla)
       if (isAdmin) {
-        console.log("Loading users for admin...");
         try {
           const usersData = await userService.getAll();
-          console.log("Users loaded:", usersData);
           setUsers(usersData);
         } catch (error) {
-          console.warn("No se pudieron cargar los usuarios:", error);
-          // No mostrar error al usuario, el selector simplemente estará vacío
+          // El selector simplemente estará vacío
         }
-      } else {
-        console.log("User is not admin, skipping user loading");
       }
     } catch (error) {
       toast.error("Error al cargar clientes");
@@ -128,13 +116,7 @@ export default function CustomersPage() {
   };
 
   // Handle open modal
-  const handleOpenModal = (customer?: Customer) => {
-    console.log("Opening modal. Customer:", customer);
-    console.log("Is Admin:", isAdmin);
-    console.log("Editing Customer:", customer ? "Yes" : "No");
-    console.log("Should show user selector:", isAdmin && !customer);
-    console.log("Available users:", users);
-
+  const openModal = (customer?: Customer) => {
     if (customer) {
       setEditingCustomer(customer);
       reset({
@@ -182,7 +164,7 @@ export default function CustomersPage() {
         </h1>
         {isAdmin && (
           <button
-            onClick={() => handleOpenModal()}
+            onClick={() => openModal()}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <svg
@@ -348,7 +330,7 @@ export default function CustomersPage() {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex items-center justify-end space-x-2">
                         <button
-                          onClick={() => handleOpenModal(customer)}
+                          onClick={() => openModal(customer)}
                           className="text-blue-600 hover:text-blue-900 p-1 rounded"
                           title="Editar"
                         >

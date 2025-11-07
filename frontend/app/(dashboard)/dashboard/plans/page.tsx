@@ -58,7 +58,6 @@ export default function PlansPage() {
       setPlans(data);
     } catch (error) {
       toast.error("Error al cargar planes");
-      console.error(error);
     } finally {
       setLoading(false);
     }

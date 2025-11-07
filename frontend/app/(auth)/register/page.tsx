@@ -27,13 +27,11 @@ export default function RegisterPage() {
   const onSubmit = async (data: RegisterFormInputs) => {
     try {
       await authService.register(data);
-
       toast.success(
         "¡Cuenta creada exitosamente! Puedes iniciar sesión ahora."
       );
       router.push("/login");
     } catch (error: any) {
-      console.error(error);
       const errorMessage =
         error.response?.data?.message || "Error al crear la cuenta";
       toast.error(errorMessage);

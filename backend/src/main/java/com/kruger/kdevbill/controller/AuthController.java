@@ -68,22 +68,6 @@ public class AuthController {
         return ResponseEntity.ok(userInfo);
     }
 
-    @GetMapping("/debug/customers")
-    @Operation(summary = "DEBUG: Ver todos los customers", description = "Endpoint de debugging para ver todos los customers y sus owners")
-    public ResponseEntity<Map<String, Object>> debugCustomers() {
-        Map<String, Object> debug = new HashMap<>();
-
-        try {
-            var customers = authService.getAllCustomersDebug();
-            debug.put("total_customers", customers.size());
-            debug.put("customers", customers);
-        } catch (Exception e) {
-            debug.put("error", e.getMessage());
-        }
-
-        return ResponseEntity.ok(debug);
-    }
-
     @PostMapping("/admin/migrate-customers")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(summary = "ADMIN: Migrar usuarios legacy", description = "Crea customer profiles para todos los usuarios USER que no tengan uno (solo ADMIN)")

@@ -40,7 +40,6 @@ export default function DashboardPage() {
       try {
         setLoading(true);
 
-        // Hacer todas las llamadas en paralelo
         const [customers, subscriptions, invoices, payments] =
           await Promise.all([
             isAdmin ? customerService.getAll() : Promise.resolve([]),
@@ -49,7 +48,6 @@ export default function DashboardPage() {
             paymentService.getAll(),
           ]);
 
-        // Calcular métricas
         const activeSubscriptions = subscriptions.filter(
           (sub) => sub.status === "ACTIVE"
         ).length;
@@ -63,12 +61,10 @@ export default function DashboardPage() {
           (pay) => pay.status === "SUCCESS"
         ).length;
 
-        // Calcular ingresos
         const totalRevenue = payments
           .filter((pay) => pay.status === "SUCCESS")
           .reduce((sum, pay) => sum + pay.amount, 0);
 
-        // Ingresos del mes actual (simplificado)
         const currentMonth = new Date().getMonth();
         const currentYear = new Date().getFullYear();
         const monthlyRevenue = payments
@@ -95,7 +91,7 @@ export default function DashboardPage() {
           totalRevenue,
         });
       } catch (error) {
-        console.error("Error fetching dashboard data:", error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }

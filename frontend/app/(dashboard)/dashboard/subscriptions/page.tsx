@@ -117,19 +117,14 @@ export default function SubscriptionsPage() {
     return matchesSearch && matchesStatus;
   });
 
-  // Handle form submission
   const onSubmit = async (data: SubscriptionFormInputs) => {
-    console.log("📤 Datos de suscripción a enviar:", data);
     try {
       if (editingSubscription) {
-        // Update existing subscription
         await subscriptionService.update(editingSubscription.id, {
           planId: data.planId,
         });
         toast.success("Suscripción actualizada exitosamente");
       } else {
-        // Create new subscription
-        console.log("🆕 Creando nueva suscripción...");
         await subscriptionService.create(data);
         toast.success("Suscripción creada exitosamente");
       }
@@ -137,10 +132,6 @@ export default function SubscriptionsPage() {
       await fetchData();
       handleCloseModal();
     } catch (error: any) {
-      console.error("❌ Error al crear suscripción:", error);
-      console.error("❌ Error response:", error.response);
-      console.error("❌ Error response data:", error.response?.data);
-
       let message = "Error al guardar suscripción";
 
       if (

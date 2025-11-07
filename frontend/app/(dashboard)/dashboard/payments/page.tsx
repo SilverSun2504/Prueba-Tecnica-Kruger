@@ -40,7 +40,6 @@ export default function PaymentsPage() {
       setPayments(data);
     } catch (error) {
       toast.error("Error al cargar pagos");
-      console.error(error);
     } finally {
       setLoading(false);
     }

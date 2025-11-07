@@ -1,5 +1,4 @@
-// src/app/(auth)/login/page.tsx
-"use client"; // MUY IMPORTANTE para usar hooks
+"use client";
 
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -12,11 +11,9 @@ import { LoginSchema } from "@/lib/schemas";
 import { authService } from "@/services/auth.service";
 import { useAuthStore } from "@/store/auth.store";
 
-// Definimos el tipo basado en el esquema
 type LoginFormInputs = z.infer<typeof LoginSchema>;
 
 export default function LoginPage() {
-  // Obtenemos la acción 'login' de nuestro store
   const { login } = useAuthStore();
 
   const {
@@ -28,46 +25,32 @@ export default function LoginPage() {
     resolver: zodResolver(LoginSchema),
   });
 
-  // Función para llenar las credenciales de demo (usuarios que ya existen en el backend)
   const fillDemoCredentials = (userType: "admin" | "user") => {
     const demoUsers = {
       admin: {
-        email: "admin2", // En el frontend usamos email, pero enviamos como username
+        email: "admin2",
         password: "admin123",
       },
       user: {
-        email: "user1", // Asumiendo que tienes un usuario normal también
+        email: "user1",
         password: "user123",
       },
     };
 
     const userData = demoUsers[userType];
-
-    // Llenar automáticamente el formulario de login
     setValue("email", userData.email);
     setValue("password", userData.password);
-
-    toast.success(
-      `Credenciales de ${userType} llenadas. Ahora puedes hacer login.`
-    );
+    toast.success(`Credenciales de ${userType} llenadas.`);
   };
   const onSubmit = async (data: LoginFormInputs) => {
     try {
-      // 1. Llamamos al servicio
       const response = await authService.login(data);
-
-      // 2. Guardamos en el store de Zustand
       login(response.token, response.user);
-
-      // 3. Mostramos notificación y redirigimos
       toast.success("¡Bienvenido!");
-
-      // Forzar redirección completa para que el middleware detecte la cookie
       setTimeout(() => {
         window.location.href = "/";
-      }, 1000); // 1 segundo de delay para que se vea el mensaje
+      }, 1000);
     } catch (error: any) {
-      console.error(error);
       const errorMessage =
         error.response?.data?.message || "Credenciales incorrectas";
       toast.error(errorMessage);
