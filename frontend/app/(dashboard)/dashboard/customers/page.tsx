@@ -38,19 +38,26 @@ export default function CustomersPage() {
     try {
       setLoading(true);
 
+      console.log("Current user:", user);
+      console.log("Is admin:", isAdmin);
+
       // Cargar clientes (obligatorio)
       const customersData = await customerService.getAll();
       setCustomers(customersData);
 
       // Cargar usuarios solo si es admin (opcional, no bloquea si falla)
       if (isAdmin) {
+        console.log("Loading users for admin...");
         try {
           const usersData = await userService.getAll();
+          console.log("Users loaded:", usersData);
           setUsers(usersData);
         } catch (error) {
           console.warn("No se pudieron cargar los usuarios:", error);
           // No mostrar error al usuario, el selector simplemente estará vacío
         }
+      } else {
+        console.log("User is not admin, skipping user loading");
       }
     } catch (error) {
       toast.error("Error al cargar clientes");
@@ -122,6 +129,12 @@ export default function CustomersPage() {
 
   // Handle open modal
   const handleOpenModal = (customer?: Customer) => {
+    console.log("Opening modal. Customer:", customer);
+    console.log("Is Admin:", isAdmin);
+    console.log("Editing Customer:", customer ? "Yes" : "No");
+    console.log("Should show user selector:", isAdmin && !customer);
+    console.log("Available users:", users);
+
     if (customer) {
       setEditingCustomer(customer);
       reset({
@@ -134,6 +147,7 @@ export default function CustomersPage() {
         name: "",
         email: "",
       });
+      setSelectedUserId(null);
     }
     setIsModalOpen(true);
   };

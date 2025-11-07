@@ -15,12 +15,13 @@ export const userService = {
       const response = await api.get<User[]>('/users');
       return response.data;
     } catch (error: any) {
-      if (error.response?.status === 404) {
-        // Endpoint no implementado, devolver usuarios conocidos
-        console.warn('Endpoint /users no implementado. Usando lista de usuarios conocidos.');
+      if (error.response?.status === 404 || error.response?.status === 403) {
+        // Endpoint no implementado o sin permisos, devolver usuarios conocidos
+        console.warn(`Endpoint /users error ${error.response?.status}. Usando lista de usuarios conocidos.`);
         return KNOWN_USERS;
       }
-      throw error;
+      console.warn('Error loading users from API, using fallback users:', error.message);
+      return KNOWN_USERS;
     }
   },
 

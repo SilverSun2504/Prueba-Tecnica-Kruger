@@ -74,6 +74,15 @@ export interface Subscription {
   createdAt: string;
 }
 
+export interface InvoiceRaw {
+  id: number;
+  subscriptionId: number;
+  amount: number;
+  status: 'OPEN' | 'PAID' | 'VOID';
+  dueDate: string;
+  issuedAt: string;
+}
+
 export interface Invoice {
   id: number;
   subscription: Subscription;
@@ -81,6 +90,16 @@ export interface Invoice {
   status: 'OPEN' | 'PAID' | 'VOID';
   dueDate: string;
   issuedAt: string;
+}
+
+export interface PaymentRaw {
+  id: number;
+  invoiceId: number;
+  amount: number;
+  method: 'CARD' | 'TRANSFER' | 'CASH';
+  status: 'SUCCESS' | 'FAILED';
+  paidAt: string;
+  reference: string;
 }
 
 export interface Payment {
